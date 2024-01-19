@@ -38,7 +38,7 @@ def reset(
 ):
     box = box_models.UserBox()
     box.reset(db, user_id)
-    return 'OK'
+    return 'Reset successful'
 
 @router.put(path='/{id}/')
 @router.put(path='/{id}')
@@ -53,7 +53,7 @@ def update_status(
     if not box_exists:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="user_not_exists"
+            detail="Box not found"
         )
 
     status_exists = db.query(box_models.UserBox) \

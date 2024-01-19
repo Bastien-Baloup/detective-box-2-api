@@ -47,7 +47,7 @@ def create_access_token(data: dict):
 def get_connected_user_id(token: Annotated[str, Depends(oauth2_password)]):
     credential_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="invalid_credentials",
+        detail="Connexion expirée",
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:

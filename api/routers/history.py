@@ -90,7 +90,7 @@ async def update_status(
         .first()
 
     if not data:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Requête d'historique invalide.")
 
     found = None
     for idx, d in enumerate(data.data):
@@ -98,7 +98,7 @@ async def update_status(
             found = idx
 
     if found is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,  detail="Id non trouvé dans la table history.")
 
     exists = db.query(history_models.HistoryUser) \
         .filter_by(history_id=data.id) \

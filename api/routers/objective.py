@@ -21,7 +21,7 @@ def get(
     o = db.query(objective_models.Objective).filter_by(box_id=box_id).first()
 
     if not o:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Objectifs non trouvé pour la box.")
 
     for d in o.data:
         exists = db\
@@ -62,7 +62,7 @@ def update_status(
         .first()
 
     if not data:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Requête d'objectif invalide.")
 
     found = None
     for idx, d in enumerate(data.data):
@@ -70,7 +70,7 @@ def update_status(
             found = idx
 
     if found is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Id non trouvé dans la table objective.")
 
     exists = db.query(objective_models.ObjectiveUser) \
         .filter_by(objective_id=data.id) \

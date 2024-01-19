@@ -71,7 +71,7 @@ def update_status(
         .first()
 
     if not data:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Requête de renfort invalide.")
 
     found = None
     for idx, d in enumerate(data.data):
@@ -79,7 +79,7 @@ def update_status(
             found = idx
 
     if found is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Id non trouvé dans la table help.")
 
     exists = db.query(help_models.HelpUser) \
         .filter_by(help_id=data.id) \

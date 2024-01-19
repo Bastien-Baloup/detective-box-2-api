@@ -58,7 +58,7 @@ def update(
         if not exists:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail="user_not_exists"
+                detail="Compte non trouvé"
             )
 
         exists.password = auth_utils.get_password_hash(user.password)
@@ -87,7 +87,7 @@ def update_user(
         if not exists:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail="user_not_exists"
+                detail="Compte non trouvé"
             )
 
         exists.name = user.name
@@ -131,7 +131,7 @@ def create(
     if exists:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail="user_exists"
+            detail="Un compte éxiste déjà pour cette adresse email."
         )
     db_user = user_models.User(
         email=user.email,
@@ -160,13 +160,12 @@ def login(
     if not exists:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="user_not_found",
+            detail="Compte non trouvé",
             headers={"WWW-Authenticate": "Bearer"},
         )
     if not auth_utils.verify_password(user.password, exists.password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="password_error",
             headers={"WWW-Authenticate": "Bearer"},
         )
 
@@ -192,7 +191,7 @@ def password_forgot(
     if not exists:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="user_not_found",
+            detail="Compte non trouvé",
             headers={"WWW-Authenticate": "Bearer"},
         )
 

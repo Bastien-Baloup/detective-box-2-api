@@ -18,24 +18,27 @@ from api.routers.users import router as user_router
 from api.routers.exports import router as exports_router
 from api.routers.stream import router as stream_router
 
+from api.database import close_database_connections
+
 app = FastAPI()
 app_stream = FastAPI()
 
-# app.add_middleware(
-#     CORSMiddleware,
-#     allow_origins=["*"],
-#     allow_credentials=True,
-#     allow_methods=["*"],
-#     allow_headers=["*"],
-# )
-#
-# app_stream.add_middleware(
-#     CORSMiddleware,
-#     allow_origins=["*"],
-#     allow_credentials=True,
-#     allow_methods=["*"],
-#     allow_headers=["*"],
-# )
+origins = [
+    'http://127.0.0.1:5173',
+    'http://localhost:5173',
+    'http://localhost',
+    'https://app2.detectivebox.fr',
+    'https://detectivebox-2-app-nihbf.ondigitalocean.app',
+    'https://dev-detectivebox-2-b4csu.ondigitalocean.app'
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(user_router)
 app.include_router(status_router)
@@ -53,8 +56,13 @@ app.include_router(exports_router)
 
 app_stream.include_router(stream_router)
 
+@app.on_event("shutdown")
+async def shutdown_event():
+    close_database_connections()
+
 async def run():
-    configs = [Config(app, port=8000), Config(app_stream, port=8001)]
+    #configs = [Config(app, port=8000), Config(app_stream, port=8001)]
+    configs = [Config(app, port=8000)]
     coros = [Server(c).serve() for c in configs]
 
     await asyncio.gather(*coros)
